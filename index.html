@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Nza Chronicles: Eclipse Realms — Open-World Action RPG</title>
+  <meta name="description" content="Karya Mandiri Nza (nzadev): Game Open-World Action RPG orisinal dengan karakter khas Cyber-Ronin Nza, 5 bioma luas, sistem tempa senjata, dan boss fight epik. Tanpa login - langsung pakai." />
+  <meta name="theme-color" content="#0b1022" />
+  <link rel="icon" type="image/png" href="./assets/ui/favicon.png" />
+  <link rel="apple-touch-icon" href="./assets/ui/icon_192.png" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div id="appShell">
+    <header id="hudBar">
+      <div class="hud-left">
+        <div class="vital-block">
+          <div id="heartsRow" class="hearts-row" aria-label="HP Hati"></div>
+          <div class="stamina-track" title="Cyber-Stamina">
+            <div id="staminaFill" class="stamina-fill"></div>
+          </div>
+        </div>
+        <span id="regionBadge" class="region-badge">Nza Haven Sanctuary</span>
+      </div>
+
+      <div id="questTracker" class="quest-tracker">
+        Segel Kuil Astral: 0/3 Aktif
+      </div>
+
+      <div class="hud-right">
+        <div class="stat-pill" title="Aether Shards (Mata Uang Upgrade)">
+          <span class="shard-dot"></span>
+          <strong id="shardCount">25</strong>
+        </div>
+        <div class="stat-pill" title="Level Plasma Katana Nza">
+          <span>Katana</span>
+          <strong id="bladeLv">Lv.1</strong>
+        </div>
+        <button id="btnHudPotion" class="hud-btn potion-btn" title="Minum Nano-Potion [H]">
+          Potion (<span id="potionCount">2</span>)
+        </button>
+        <button id="btnHudForge" class="hud-btn" title="Buka Tempa Upgrade [B]">Tempa [B]</button>
+        <button id="btnHudMap" class="hud-btn" title="Peta Dunia & Fast Travel [M]">Peta [M]</button>
+        <button id="btnHudMute" class="hud-btn">Suara: ON</button>
+        <button id="btnHudFs" class="hud-btn" title="Layar Penuh">Layar Penuh</button>
+      </div>
+    </header>
+
+    <main id="stageWrap">
+      <canvas id="gameCanvas" width="640" height="360"></canvas>
+
+      <div id="bossHud" class="boss-hud hidden">
+        <div id="bossNameText" class="boss-name">Malakor, Sang Penguasa Gerhana</div>
+        <div class="boss-bar-bg">
+          <div id="bossHpFill" class="boss-bar-fill"></div>
+        </div>
+      </div>
+
+      <div id="toastBanner" class="toast-banner"></div>
+
+      <div id="minimapWrap" class="minimap-wrap" title="Klik untuk Peta Dunia & Fast Travel [M]">
+        <canvas id="minimapCanvas" width="120" height="120"></canvas>
+        <span class="minimap-caption">PETA [M]</span>
+      </div>
+
+      <div id="touchControls" class="touch-controls">
+        <div id="joyZone" class="joy-zone">
+          <div id="joyKnob" class="joy-knob"></div>
+        </div>
+        <div class="action-cluster">
+          <button id="btnTouchInteract" class="act-btn act-f">AKSI [F]</button>
+          <button id="btnTouchBow" class="act-btn">PANAH</button>
+          <button id="btnTouchBomb" class="act-btn">BOM</button>
+          <button id="btnTouchSpin" class="act-btn">SPIN</button>
+          <button id="btnTouchDash" class="act-btn">DASH</button>
+          <button id="btnTouchSlash" class="act-btn act-main">KATANA</button>
+        </div>
+      </div>
+    </main>
+
+    <div id="titleModal" class="modal-backdrop">
+      <div class="title-card">
+        <div class="hero-art-wrap">
+          <img src="./assets/ui/hero_banner.png" alt="Nza Chronicles Eclipse Realms Key Art" class="hero-art" />
+          <div class="demo-pill">Akun Demo: Tanpa login - langsung pakai</div>
+        </div>
+        <div class="title-body">
+          <div class="title-head">
+            <img src="./assets/ui/game_icon.png" alt="Logo Nza Chronicles" class="title-icon" />
+            <div>
+              <h1>NZA CHRONICLES: ECLIPSE REALMS</h1>
+              <p class="subtitle">Original Open-World Action RPG — Karya Mandiri Personal <strong>Nza (nzadev)</strong></p>
+            </div>
+          </div>
+
+          <p class="lore-desc">
+            Kendalikan <strong>Nza</strong>, penjelajah <em>Cyber-Ronin</em> berjubah indigo dengan selendang sirkuit astral dan <strong>Plasma Katana</strong> bercahaya sian. Jelajahi 5 wilayah open-world tanpa batas, taklukkan monster orisinal (<em>Void-Hound</em>, <em>Crystal Rune-Golem</em>, <em>Cryo-Wraith</em>, <em>Pyro-Djinn</em>), nyalakan 3 Kuil Elemen, dan tumbangkan <strong>Malakor, Sang Penguasa Gerhana</strong>!
+          </p>
+
+          <div class="controls-grid">
+            <div><kbd>WASD</kbd> / <kbd>Panah</kbd> Gerak 8 Arah</div>
+            <div><kbd>J</kbd> / <kbd>Spasi</kbd> Kombo Katana</div>
+            <div><kbd>U</kbd> / <kbd>E</kbd> Tebasan 360° Spin</div>
+            <div><kbd>K</kbd> / <kbd>X</kbd> Volt Energy Bow</div>
+            <div><kbd>L</kbd> / <kbd>C</kbd> Chrono-Bomb (Jebol Dinding Retak)</div>
+            <div><kbd>Shift</kbd> Phantom Dash &bull; <kbd>F</kbd> Interaksi &bull; <kbd>M</kbd> Peta</div>
+          </div>
+
+          <div class="load-box">
+            <div class="load-bar">
+              <div id="loadProgressFill" class="load-fill"></div>
+            </div>
+            <small id="loadStatusText">Menyiapkan aset permainan...</small>
+          </div>
+
+          <div class="title-actions">
+            <button id="btnContinueSave" class="btn-primary btn-gold hidden">Lanjutkan Save</button>
+            <button id="btnStartNew" class="btn-primary" disabled>Mulai Petualangan Baru</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialogueModal" class="modal-backdrop hidden">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h2 id="dlgName">Master Kael</h2>
+            <small id="dlgRole">Pandai Besi Cyber-Astral</small>
+          </div>
+          <button id="btnCloseDialogue" class="btn-close">Tutup [Esc]</button>
+        </div>
+        <div id="dlgBody" class="dlg-body"></div>
+        <div class="panel-footer">
+          <button id="btnDlgOpenForge" class="btn-primary hidden">Buka Tempa Upgrade</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="forgeModal" class="modal-backdrop hidden">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h2>Tempa Astral Nza</h2>
+            <small id="forgeFeedback">Tingkatkan kekuatan Cyber-Ronin menggunakan Aether Shard</small>
+          </div>
+          <div class="forge-bal" id="forgeShardBalance">0 Shard</div>
+        </div>
+        <div id="forgeItemsList" class="forge-list"></div>
+        <div class="panel-footer">
+          <button id="btnCloseForge" class="btn-close">Kembali ke Dunia [Esc]</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mapModal" class="modal-backdrop hidden">
+      <div class="panel-card map-card">
+        <div class="panel-header">
+          <div>
+            <h2>Peta Dunia &amp; Obelisk Fast Travel</h2>
+            <small>Putih: Posisi Nza &bull; Kuning/Sian: 3 Kuil Elemen &bull; Merah: Boss Malakor</small>
+          </div>
+          <button id="btnCloseMap" class="btn-close">Tutup [M / Esc]</button>
+        </div>
+        <div class="map-layout">
+          <canvas id="worldMapLargeCanvas" width="330" height="330"></canvas>
+          <div class="map-side">
+            <label class="eval-toggle">
+              <input type="checkbox" id="chkEvalFastTravel" />
+              <span>Mode Uji Cepat Penguji (Buka Semua Titik Teleport &amp; Boss)</span>
+            </label>
+            <div id="warpList" class="warp-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="victoryModal" class="modal-backdrop hidden">
+      <div class="panel-card victory-card">
+        <h2>GERHANA DITAKLUKKAN!</h2>
+        <p>Nza berhasil menumbangkan <strong>Malakor, Sang Penguasa Gerhana</strong> dan memulihkan cahaya Astral di seluruh penjuru negeri!</p>
+        <ul id="vicStats" class="vic-stats"></ul>
+        <div class="title-actions">
+          <button id="btnVicContinue" class="btn-primary">Lanjut Eksplorasi Open World</button>
+          <button id="btnVicRestart" class="btn-close">Mulai Baru</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

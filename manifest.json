@@ -1,0 +1,22 @@
+{
+  "name": "Nza Chronicles: Eclipse Realms",
+  "short_name": "Nza OpenWorld",
+  "description": "Original Open-World Action RPG karya mandiri Nza (nzadev). Tanpa login - langsung pakai.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#060913",
+  "theme_color": "#0b1022",
+  "icons": [
+    {
+      "src": "./assets/ui/icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/ui/game_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
