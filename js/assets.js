@@ -4,6 +4,7 @@ export async function loadGameAssets(onProgress = () => {}) {
     ["mobs", "./assets/sprites/mobs.png"],
     ["boss", "./assets/sprites/boss_malakor.png"],
     ["tiles", "./assets/sprites/world_tiles.png"],
+    ["props", "./assets/sprites/props_25d.png"],
     ["fx", "./assets/sprites/fx_items.png"],
     ["banner", "./assets/ui/hero_banner.png"],
     ["icon", "./assets/ui/game_icon.png"],

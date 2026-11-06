@@ -1,4 +1,4 @@
-const CACHE_NAME = "nza-openworld-v1";
+const CACHE_NAME = "nza-openworld-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -13,6 +13,7 @@ const ASSETS = [
   "./assets/sprites/mobs.png",
   "./assets/sprites/boss_malakor.png",
   "./assets/sprites/world_tiles.png",
+  "./assets/sprites/props_25d.png",
   "./assets/sprites/fx_items.png",
   "./assets/ui/hero_banner.png",
   "./assets/ui/game_icon.png",

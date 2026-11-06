@@ -11,13 +11,14 @@ async function boot() {
   const loadText = $("loadStatusText");
   const btnStartNew = $("btnStartNew");
   const btnContinue = $("btnContinueSave");
+  const btnQuickRealm = $("btnQuickRealm");
 
   let assets;
   try {
     assets = await loadGameAssets((ratio) => {
       const pct = Math.round(ratio * 100);
       if (loadFill) loadFill.style.width = `${pct}%`;
-      if (loadText) loadText.textContent = `Memuat aset dunia & karakter Nza... ${pct}%`;
+      if (loadText) loadText.textContent = `Memuat dunia 16-bit & karakter Nza... ${pct}%`;
     });
   } catch (err) {
     if (loadText) loadText.textContent = err.message;
@@ -26,6 +27,7 @@ async function boot() {
 
   if (loadText) loadText.textContent = "Siap dimainkan — Tanpa login, langsung pakai!";
   btnStartNew.disabled = false;
+  btnQuickRealm.disabled = false;
 
   let toastTimer = null;
   const showToast = (msg) => {
@@ -74,7 +76,7 @@ async function boot() {
       {
         key: "blade",
         title: `Plasma Katana Nza (Lv.${p.bladeLevel})`,
-        desc: `Damage tebasan utama naik (${engine.getBladeDamage()} -> ${engine.getBladeDamage() + 6})`,
+        desc: `Damage tebasan & Sword Beam naik (${engine.getBladeDamage()} -> ${engine.getBladeDamage() + 6})`,
         cost: costs.blade,
       },
       {
@@ -86,7 +88,7 @@ async function boot() {
       {
         key: "stamina",
         title: `Cyber-Core Stamina (${p.maxStamina})`,
-        desc: "Tambah +25 Stamina untuk Dash, Spin Slash, Panah & Bom",
+        desc: "Tambah +25 Stamina untuk Spin Slash, Chakram, Perisai, Panah & Bom",
         cost: costs.stamina,
       },
       {
@@ -206,7 +208,7 @@ async function boot() {
       bossRow.innerHTML = `
         <div>
           <strong>Sanctum Boss Malakor (Langsung Buka Segel)</strong>
-          <small>Pintasan Uji Coba Penguji ke Arena Boss Terakhir</small>
+          <small>Pintasan Uji Coba Langsung ke Arena Boss Terakhir</small>
         </div>
         <button class="btn-warp">Teleport Boss</button>
       `;
@@ -254,7 +256,7 @@ async function boot() {
     } else if (st.gateOpen) {
       qt.textContent = "Segel Terbuka! Masuki Eclipse Citadel (Timur Laut) & kalahkan Malakor!";
     } else {
-      qt.textContent = `Segel Kuil Astral: ${st.shrinesDone}/3 Aktif — Buka Peta [M] untuk navigasi`;
+      qt.textContent = `Segel Kuil Astral: ${st.shrinesDone}/3 Aktif — Peta [M]`;
     }
 
     const bossHud = $("bossHud");
@@ -280,7 +282,7 @@ async function boot() {
     sound,
     callbacks: {
       onHudUpdate: updateHud,
-      onRegionChange: (reg) => showToast(`Memasuki Wilayah: ${reg.name}`),
+      onRegionChange: (reg) => showToast(`Wilayah: ${reg.name}`),
       onToast: showToast,
       onDialogue: openDialogue,
       onOpenForge: openForge,
@@ -302,17 +304,23 @@ async function boot() {
     btnContinue.classList.remove("hidden");
   }
 
-  const startSession = (useSave) => {
+  const startSession = (useSave, openRealmPicker = false) => {
     sound.unlock();
     engine.initNewOrSaved(useSave);
     $("titleModal").classList.add("hidden");
     engine.setPaused(false);
     engine.start();
-    showToast(useSave ? "Save berhasil dimuat! Selamat berpetualang, Nza!" : "Selamat datang di Nza Haven Sanctuary!");
+    if (openRealmPicker) {
+      $("chkEvalFastTravel").checked = true;
+      openWorldMap();
+    } else {
+      showToast(useSave ? "Save berhasil dimuat! Selamat berpetualang, Nza!" : "Selamat datang di Nza Haven Sanctuary!");
+    }
   };
 
-  btnStartNew.addEventListener("click", () => startSession(false));
-  btnContinue.addEventListener("click", () => startSession(true));
+  btnStartNew.addEventListener("click", () => startSession(false, false));
+  btnContinue.addEventListener("click", () => startSession(true, false));
+  btnQuickRealm.addEventListener("click", () => startSession(false, true));
 
   $("btnCloseDialogue").addEventListener("click", closeAllModals);
   $("btnDlgOpenForge").addEventListener("click", openForge);
@@ -321,7 +329,7 @@ async function boot() {
   $("btnVicContinue").addEventListener("click", closeAllModals);
   $("btnVicRestart").addEventListener("click", () => {
     closeAllModals();
-    startSession(false);
+    startSession(false, false);
   });
 
   $("btnHudPotion").addEventListener("click", () => engine.triggerPotion());
@@ -343,9 +351,22 @@ async function boot() {
     }
   });
 
+  const gameCanvas = $("gameCanvas");
+  gameCanvas.addEventListener("contextmenu", (e) => e.preventDefault());
+  gameCanvas.addEventListener("mousedown", (e) => {
+    if (!$("titleModal").classList.contains("hidden") || engine.paused) return;
+    sound.unlock();
+    if (e.button === 0) engine.setAttackHeld(true);
+    else if (e.button === 2) engine.setShieldHeld(true);
+  });
+  window.addEventListener("mouseup", (e) => {
+    if (e.button === 0) engine.setAttackHeld(false);
+    else if (e.button === 2) engine.setShieldHeld(false);
+  });
+
   window.addEventListener("keydown", (e) => {
     if (!$("titleModal").classList.contains("hidden")) {
-      if (e.code === "Enter") startSession(engine.hasSaveData());
+      if (e.code === "Enter") startSession(engine.hasSaveData(), false);
       return;
     }
 
@@ -378,10 +399,16 @@ async function boot() {
 
     if (e.code === "KeyJ" || e.code === "Space" || e.code === "KeyZ") {
       e.preventDefault();
-      engine.triggerSlash();
-    } else if (e.code === "KeyU" || e.code === "KeyE") {
+      if (!e.repeat) engine.setAttackHeld(true);
+    } else if (e.code === "KeyE") {
       e.preventDefault();
-      engine.triggerSpinSlash();
+      engine.triggerSpinSlash(false);
+    } else if (e.code === "KeyU") {
+      e.preventDefault();
+      engine.triggerChakram();
+    } else if (e.code === "KeyI" || e.code === "KeyV") {
+      e.preventDefault();
+      engine.setShieldHeld(true);
     } else if (e.code === "KeyK" || e.code === "KeyX") {
       e.preventDefault();
       engine.triggerBow();
@@ -402,10 +429,17 @@ async function boot() {
 
   window.addEventListener("keyup", (e) => {
     engine.keys.delete(e.code);
+    if (e.code === "KeyJ" || e.code === "Space" || e.code === "KeyZ") {
+      engine.setAttackHeld(false);
+    } else if (e.code === "KeyI" || e.code === "KeyV") {
+      engine.setShieldHeld(false);
+    }
   });
 
   window.addEventListener("blur", () => {
     engine.keys.clear();
+    engine.setAttackHeld(false);
+    engine.setShieldHeld(false);
   });
 
   const joyZone = $("joyZone");
@@ -449,6 +483,28 @@ async function boot() {
     joyZone.addEventListener("pointercancel", resetStick);
   }
 
+  const slashTouch = $("btnTouchSlash");
+  if (slashTouch) {
+    slashTouch.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      sound.unlock();
+      engine.setAttackHeld(true);
+    });
+    slashTouch.addEventListener("pointerup", () => engine.setAttackHeld(false));
+    slashTouch.addEventListener("pointercancel", () => engine.setAttackHeld(false));
+  }
+
+  const shieldTouch = $("btnTouchShield");
+  if (shieldTouch) {
+    shieldTouch.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      sound.unlock();
+      engine.setShieldHeld(true);
+    });
+    shieldTouch.addEventListener("pointerup", () => engine.setShieldHeld(false));
+    shieldTouch.addEventListener("pointercancel", () => engine.setShieldHeld(false));
+  }
+
   const bindTouchBtn = (id, fn) => {
     const el = $(id);
     if (!el) return;
@@ -458,11 +514,9 @@ async function boot() {
       fn();
     });
   };
-  bindTouchBtn("btnTouchSlash", () => engine.triggerSlash());
-  bindTouchBtn("btnTouchSpin", () => engine.triggerSpinSlash());
+  bindTouchBtn("btnTouchChakram", () => engine.triggerChakram());
   bindTouchBtn("btnTouchBow", () => engine.triggerBow());
   bindTouchBtn("btnTouchBomb", () => engine.triggerBomb());
-  bindTouchBtn("btnTouchDash", () => engine.triggerDash());
   bindTouchBtn("btnTouchInteract", () => engine.triggerInteract());
 }
 

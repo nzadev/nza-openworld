@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Nza Chronicles: Eclipse Realms — Open-World Action RPG</title>
-  <meta name="description" content="Karya Mandiri Nza (nzadev): Game Open-World Action RPG orisinal dengan karakter khas Cyber-Ronin Nza, 5 bioma luas, sistem tempa senjata, dan boss fight epik. Tanpa login - langsung pakai." />
+  <title>Nza Chronicles: Eclipse Realms — 16-Bit Open-World Action RPG</title>
+  <meta name="description" content="Karya Mandiri Nza (nzadev): Game 16-Bit Open-World Action RPG ala Zelda dengan aset & karakter khas orisinal Cyber-Ronin Nza, Sword Beam, Chakram Boomerang, Shield Parry, 5 bioma luas, dan duel Boss Malakor. Tanpa login - langsung pakai." />
   <meta name="theme-color" content="#0b1022" />
   <link rel="icon" type="image/png" href="./assets/ui/favicon.png" />
   <link rel="apple-touch-icon" href="./assets/ui/icon_192.png" />
@@ -17,7 +17,7 @@
       <div class="hud-left">
         <div class="vital-block">
           <div id="heartsRow" class="hearts-row" aria-label="HP Hati"></div>
-          <div class="stamina-track" title="Cyber-Stamina">
+          <div class="stamina-track" title="Astral Energy / Stamina">
             <div id="staminaFill" class="stamina-fill"></div>
           </div>
         </div>
@@ -29,11 +29,11 @@
       </div>
 
       <div class="hud-right">
-        <div class="stat-pill" title="Aether Shards (Mata Uang Upgrade)">
+        <div class="stat-pill" title="Aether Shards (Rupee Astral)">
           <span class="shard-dot"></span>
           <strong id="shardCount">25</strong>
         </div>
-        <div class="stat-pill" title="Level Plasma Katana Nza">
+        <div class="stat-pill" title="Level Plasma Katana Nza (HP Penuh = Sword Beam!)">
           <span>Katana</span>
           <strong id="bladeLv">Lv.1</strong>
         </div>
@@ -43,12 +43,12 @@
         <button id="btnHudForge" class="hud-btn" title="Buka Tempa Upgrade [B]">Tempa [B]</button>
         <button id="btnHudMap" class="hud-btn" title="Peta Dunia & Fast Travel [M]">Peta [M]</button>
         <button id="btnHudMute" class="hud-btn">Suara: ON</button>
-        <button id="btnHudFs" class="hud-btn" title="Layar Penuh">Layar Penuh</button>
+        <button id="btnHudFs" class="hud-btn" title="Layar Penuh">Penuh</button>
       </div>
     </header>
 
     <main id="stageWrap">
-      <canvas id="gameCanvas" width="640" height="360"></canvas>
+      <canvas id="gameCanvas" width="960" height="540"></canvas>
 
       <div id="bossHud" class="boss-hud hidden">
         <div id="bossNameText" class="boss-name">Malakor, Sang Penguasa Gerhana</div>
@@ -70,10 +70,10 @@
         </div>
         <div class="action-cluster">
           <button id="btnTouchInteract" class="act-btn act-f">AKSI [F]</button>
+          <button id="btnTouchChakram" class="act-btn">CHAKRAM</button>
           <button id="btnTouchBow" class="act-btn">PANAH</button>
           <button id="btnTouchBomb" class="act-btn">BOM</button>
-          <button id="btnTouchSpin" class="act-btn">SPIN</button>
-          <button id="btnTouchDash" class="act-btn">DASH</button>
+          <button id="btnTouchShield" class="act-btn">PERISAI</button>
           <button id="btnTouchSlash" class="act-btn act-main">KATANA</button>
         </div>
       </div>
@@ -90,33 +90,34 @@
             <img src="./assets/ui/game_icon.png" alt="Logo Nza Chronicles" class="title-icon" />
             <div>
               <h1>NZA CHRONICLES: ECLIPSE REALMS</h1>
-              <p class="subtitle">Original Open-World Action RPG — Karya Mandiri Personal <strong>Nza (nzadev)</strong></p>
+              <p class="subtitle">16-Bit Top-Down Open-World Adventure — Karya Mandiri <strong>Nza (nzadev)</strong></p>
             </div>
           </div>
 
           <p class="lore-desc">
-            Kendalikan <strong>Nza</strong>, penjelajah <em>Cyber-Ronin</em> berjubah indigo dengan selendang sirkuit astral dan <strong>Plasma Katana</strong> bercahaya sian. Jelajahi 5 wilayah open-world tanpa batas, taklukkan monster orisinal (<em>Void-Hound</em>, <em>Crystal Rune-Golem</em>, <em>Cryo-Wraith</em>, <em>Pyro-Djinn</em>), nyalakan 3 Kuil Elemen, dan tumbangkan <strong>Malakor, Sang Penguasa Gerhana</strong>!
+            Petualangan 16-bit bergaya <em>Zelda</em> dengan karakter khas <strong>Nza (Cyber-Ronin)</strong> &amp; monster orisinal! Tebas rumput &amp; guci kuno, tembakkan <strong>Sword Beam</strong> saat Hati penuh, tahan tombol serang untuk <strong>Hurricane Spin</strong>, lempar <strong>Astral Chakram (Boomerang)</strong> untuk memungut kristal &amp; men-stun musuh, tangkis bola api dengan <strong>Perisai Aegis (Parry)</strong>, jebol dinding rahasia pakai <strong>Chrono-Bomb</strong>, dan kalahkan <strong>Malakor</strong>!
           </p>
 
           <div class="controls-grid">
             <div><kbd>WASD</kbd> / <kbd>Panah</kbd> Gerak 8 Arah</div>
-            <div><kbd>J</kbd> / <kbd>Spasi</kbd> Kombo Katana</div>
-            <div><kbd>U</kbd> / <kbd>E</kbd> Tebasan 360° Spin</div>
-            <div><kbd>K</kbd> / <kbd>X</kbd> Volt Energy Bow</div>
-            <div><kbd>L</kbd> / <kbd>C</kbd> Chrono-Bomb (Jebol Dinding Retak)</div>
-            <div><kbd>Shift</kbd> Phantom Dash &bull; <kbd>F</kbd> Interaksi &bull; <kbd>M</kbd> Peta</div>
+            <div><kbd>J</kbd> / <kbd>Spasi</kbd> Katana (Tahan = Charge Spin!)</div>
+            <div><kbd>U</kbd> Chakram Boomerang (Stun &amp; Ambil Loot)</div>
+            <div><kbd>I</kbd> / <kbd>Klik Kanan</kbd> Perisai Parry Proyektil</div>
+            <div><kbd>K</kbd> Volt Bow &bull; <kbd>L</kbd> Chrono-Bomb</div>
+            <div><kbd>Shift</kbd> Dash &bull; <kbd>F</kbd> Interaksi &bull; <kbd>M</kbd> Peta</div>
           </div>
 
           <div class="load-box">
             <div class="load-bar">
               <div id="loadProgressFill" class="load-fill"></div>
             </div>
-            <small id="loadStatusText">Menyiapkan aset permainan...</small>
+            <small id="loadStatusText">Menyiapkan aset pixel-art 16-bit...</small>
           </div>
 
           <div class="title-actions">
             <button id="btnContinueSave" class="btn-primary btn-gold hidden">Lanjutkan Save</button>
-            <button id="btnStartNew" class="btn-primary" disabled>Mulai Petualangan Baru</button>
+            <button id="btnStartNew" class="btn-primary" disabled>▶ Mulai Petualangan</button>
+            <button id="btnQuickRealm" class="btn-close" disabled>🗺 Pilih Wilayah / Boss</button>
           </div>
         </div>
       </div>
@@ -159,7 +160,7 @@
         <div class="panel-header">
           <div>
             <h2>Peta Dunia &amp; Obelisk Fast Travel</h2>
-            <small>Putih: Posisi Nza &bull; Kuning/Sian: 3 Kuil Elemen &bull; Merah: Boss Malakor</small>
+            <small>Putih: Nza &bull; Kuning/Sian: 3 Kuil Elemen &bull; Merah: Sanctum Boss Malakor</small>
           </div>
           <button id="btnCloseMap" class="btn-close">Tutup [M / Esc]</button>
         </div>
@@ -168,7 +169,7 @@
           <div class="map-side">
             <label class="eval-toggle">
               <input type="checkbox" id="chkEvalFastTravel" />
-              <span>Mode Uji Cepat Penguji (Buka Semua Titik Teleport &amp; Boss)</span>
+              <span>Mode Uji Cepat (Buka Semua Wilayah &amp; Arena Boss)</span>
             </label>
             <div id="warpList" class="warp-list"></div>
           </div>

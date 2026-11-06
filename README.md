@@ -27,3 +27,4 @@ Game **Open-World Action RPG** orisinal berbasis HTML5 Canvas & ES Modules karya
 - **Tempa Upgrade Senjata & Karakter**: Tingkatkan level Plasma Katana, kapasitas Hati Astral, Cyber-Stamina, dan Nano-Potion menggunakan Aether Shard.
 - **Peta Dunia Interaktif & Fast Travel**: Dilengkapi Obelisk Teleportasi serta opsi **Mode Uji Cepat Penguji** untuk berpindah instan ke kuil atau arena boss kapan saja.
 - **Multi-Input & Auto-Save**: Mendukung Keyboard PC, Gamepad, dan Virtual Joystick layar sentuh smartphone dengan penyimpanan otomatis di browser.
+
